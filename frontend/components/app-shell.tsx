@@ -15,6 +15,7 @@ import {
   Truck,
   Settings,
   UserCog,
+  BookOpen,
   PanelLeftClose,
   Menu,
   LogOut,
@@ -59,6 +60,7 @@ const navGroups: NavGroup[] = [
     items: [
       { href: "/settings", label: "Configuracoes", icon: Settings },
       { href: "/users", label: "Usuarios", icon: UserCog },
+      { href: "/tutorials", label: "Tutoriais", icon: BookOpen },
     ],
   },
 ];
@@ -73,6 +75,7 @@ const pageTitles: Record<string, string> = {
   "/suppliers": "Fornecedores",
   "/settings": "Configuracoes",
   "/users": "Usuarios",
+  "/tutorials": "Tutoriais",
 };
 
 export default function AppShell({ children }: { children: ReactNode }) {
