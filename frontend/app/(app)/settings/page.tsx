@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Plus,
@@ -14,7 +14,10 @@ import {
   Phone,
   AtSign,
   MapPin,
-  Globe,
+  Upload,
+  ImageIcon,
+  Loader2,
+  X,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +30,8 @@ import api from "@/lib/api";
 import { formatCurrency } from "@/lib/format";
 import { toast } from "sonner";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 interface Settings {
   tenant_id: number;
   tax_rate: number;
@@ -37,8 +42,8 @@ interface Settings {
   company_instagram: string | null;
   company_address: string | null;
   company_whatsapp: string | null;
-  logo_url: string | null;
-  accent_color: string | null;
+  company_logo: string | null;
+  pdf_accent_color: string | null;
 }
 
 interface FixedCost {
@@ -53,6 +58,10 @@ export default function SettingsPage() {
   const [newFcName, setNewFcName] = useState("");
   const [newFcValue, setNewFcValue] = useState("");
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchData = async () => {
     try {
@@ -82,12 +91,69 @@ export default function SettingsPage() {
       company_name: settings.company_name,
       company_phone: settings.company_phone,
       company_instagram: settings.company_instagram,
-      company_address: settings.company_address,
-      company_whatsapp: settings.company_whatsapp,
-      logo_url: settings.logo_url,
-      accent_color: settings.accent_color,
+      pdf_pdf_accent_color: settings.pdf_accent_color,
     });
     toast.success("Configurações salvas com sucesso!");
+  };
+
+  const handleLogoUpload = useCallback(async (file: File) => {
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    if (!ext || !["png", "jpg", "jpeg"].includes(ext)) {
+      toast.error("Formato inválido. Use PNG ou JPG.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Arquivo muito grande. Máximo 5MB.");
+      return;
+    }
+
+    // Show local preview immediately
+    setLogoPreview(URL.createObjectURL(file));
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await api.post("/api/settings/upload-logo", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (settings) {
+        setSettings({ ...settings, company_logo: res.data.logo_url });
+      }
+      setLogoPreview(null);
+      toast.success("Logo enviada com sucesso!");
+    } catch {
+      setLogoPreview(null);
+      toast.error("Erro ao enviar logo.");
+    } finally {
+      setUploading(false);
+    }
+  }, [settings]);
+
+  const handleRemoveLogo = async () => {
+    try {
+      await api.delete("/api/settings/logo");
+      if (settings) {
+        setSettings({ ...settings, company_logo: null });
+      }
+      setLogoPreview(null);
+      toast.success("Logo removida!");
+    } catch {
+      toast.error("Erro ao remover logo.");
+    }
+  };
+
+  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleLogoUpload(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleLogoUpload(file);
   };
 
   const addFixedCost = async () => {
@@ -211,16 +277,64 @@ export default function SettingsPage() {
                         style={{ borderRadius: 8 }}
                       />
                     </div>
-                    <div>
+                    {/* Logo Upload */}
+                    <div className="space-y-2">
                       <Label className="text-xs text-[#7880A0] flex items-center gap-1">
-                        <Globe className="h-3 w-3" /> URL do Logo
+                        <ImageIcon className="h-3 w-3" /> Logo da Empresa
                       </Label>
-                      <Input
-                        value={settings.logo_url || ""}
-                        onChange={(e) => setSettings({ ...settings, logo_url: e.target.value })}
-                        placeholder="https://..."
-                        style={{ borderRadius: 8 }}
-                      />
+                      <div className="flex items-start gap-4">
+                        {/* Preview */}
+                        {(logoPreview || settings.company_logo) && (
+                          <div className="relative shrink-0">
+                            <img
+                              src={logoPreview || `${API_BASE}${settings.company_logo}`}
+                              alt="Logo"
+                              className="w-20 h-20 rounded-xl object-contain border border-[#E2E4EE] bg-white"
+                            />
+                            {uploading && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-white/70 rounded-xl">
+                                <Loader2 className="h-5 w-5 animate-spin text-[#4A5BA8]" />
+                              </div>
+                            )}
+                            {!uploading && (
+                              <button
+                                onClick={handleRemoveLogo}
+                                className="absolute -top-2 -right-2 p-0.5 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Drop zone */}
+                        <div
+                          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                          onDragLeave={() => setDragOver(false)}
+                          onDrop={onDrop}
+                          onClick={() => fileInputRef.current?.click()}
+                          className={`flex-1 flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
+                            dragOver
+                              ? "border-[#4A5BA8] bg-[#EEF0F8]"
+                              : "border-[#E2E4EE] hover:border-[#7880A0] hover:bg-[#FAFBFE]"
+                          }`}
+                        >
+                          <Upload className={`h-8 w-8 mb-2 ${dragOver ? "text-[#4A5BA8]" : "text-[#7880A0]"}`} />
+                          <p className="text-sm font-medium text-[#1E2247]">
+                            Clique ou arraste para enviar sua logo
+                          </p>
+                          <p className="text-xs text-[#7880A0] mt-1">
+                            PNG ou JPG, máximo 5MB
+                          </p>
+                        </div>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".png,.jpg,.jpeg"
+                          onChange={onFileSelect}
+                          className="hidden"
+                        />
+                      </div>
                     </div>
                     <Button
                       onClick={saveSettings}
@@ -401,14 +515,14 @@ export default function SettingsPage() {
                       <div className="flex items-center gap-4">
                         <input
                           type="color"
-                          value={settings.accent_color || "#4A5BA8"}
-                          onChange={(e) => setSettings({ ...settings, accent_color: e.target.value })}
+                          value={settings.pdf_accent_color || "#4A5BA8"}
+                          onChange={(e) => setSettings({ ...settings, pdf_accent_color: e.target.value })}
                           className="w-16 h-16 rounded-xl border border-[#E2E4EE] cursor-pointer"
                         />
                         <div className="flex-1">
                           <Input
-                            value={settings.accent_color || "#4A5BA8"}
-                            onChange={(e) => setSettings({ ...settings, accent_color: e.target.value })}
+                            value={settings.pdf_accent_color || "#4A5BA8"}
+                            onChange={(e) => setSettings({ ...settings, pdf_accent_color: e.target.value })}
                             placeholder="#4A5BA8"
                             style={{ borderRadius: 8 }}
                           />
@@ -421,7 +535,7 @@ export default function SettingsPage() {
                         <p className="text-xs text-[#7880A0] mb-2">Preview</p>
                         <div
                           className="h-8 rounded-lg flex items-center px-4"
-                          style={{ backgroundColor: settings.accent_color || "#4A5BA8" }}
+                          style={{ backgroundColor: settings.pdf_accent_color || "#4A5BA8" }}
                         >
                           <span className="text-white text-sm font-medium">
                             {settings.company_name || "Sua Empresa"} — Cabeçalho do PDF
