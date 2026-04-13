@@ -15,6 +15,12 @@ import {
   ChevronUp,
   BookOpen,
   CheckCircle2,
+  DollarSign,
+  TrendingDown,
+  Zap,
+  FileSignature,
+  CheckCircle,
+  Link,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -538,6 +544,156 @@ Dica: ao duplicar, sempre revise os preços. Se o orçamento original é de mese
 
 Dica: esse fluxo completo parece longo, mas depois que você pega o ritmo, cada etapa leva poucos minutos. O Île Magique foi feito para acelerar seu processo, não para complicar.`,
   },
+  {
+    id: 24,
+    category: "Financeiro",
+    title: "Registrando Receitas",
+    difficulty: "basico",
+    content: `Acesse Financeiro no menu lateral e registre cada receita para manter seu controle financeiro em dia.
+
+• Clique em "+ Nova Receita" (botão verde)
+• Preencha: descrição (ex: "Festa Ana Silva - Tema Safari"), valor, categoria e forma de pagamento
+• Categorias disponíveis: Venda de serviço, Sinal/Entrada, Pagamento parcial, Quitação, Outro
+• Formas de pagamento: PIX, Dinheiro, Cartão crédito, Cartão débito, Transferência, Boleto
+• Defina o status: Pago (já recebeu) ou Pendente (ainda vai receber)
+• Se for pendente, preencha a data de vencimento para controle de cobranças
+• Vincule a um cliente e orçamento para manter o histórico conectado
+
+Dica: sempre vincule a receita ao orçamento correspondente — isso facilita o controle`,
+  },
+  {
+    id: 25,
+    category: "Financeiro",
+    title: "Registrando Despesas",
+    difficulty: "basico",
+    content: `No Financeiro, registre todas as suas despesas para ter uma visão real da sua margem de lucro.
+
+• Clique em "+ Nova Despesa" (botão vermelho)
+• Preencha: descrição (ex: "Compra de balões - Fornecedor X"), valor, categoria e forma de pagamento
+• Categorias de despesa: Material, Transporte, Fornecedor, Ajudante, Custo fixo, Outro
+• Registre despesas no momento que acontecem para não perder o controle
+• Se for uma despesa futura, marque como Pendente e defina a data de vencimento
+
+Dica: registre TODAS as despesas, mesmo as pequenas — elas somam no final do mês e afetam sua margem real`,
+  },
+  {
+    id: 26,
+    category: "Financeiro",
+    title: "Gerando Pagamentos Automáticos do Orçamento",
+    difficulty: "intermediario",
+    content: `Automatize a criação de parcelas a partir dos seus orçamentos aprovados.
+
+• No Financeiro, clique em "Gerar do Orçamento"
+• Selecione um orçamento aprovado ou pago
+• O sistema cria automaticamente as parcelas baseado na condição de pagamento do orçamento
+• Exemplo: se a condição é "50% entrada + 50% no evento", ele cria 2 transações
+  - Primeira parcela: 50% do valor, vencimento hoje, status pendente
+  - Segunda parcela: 50% do valor, vencimento na data do evento, status pendente
+• Conforme for recebendo, clique em "Marcar como Pago" em cada parcela
+• Você também pode gerar pagamentos direto do editor do orçamento, no botão "Registrar Pagamento"
+
+Dica: gere os pagamentos assim que o orçamento for aprovado para não esquecer de cobrar`,
+  },
+  {
+    id: 27,
+    category: "Financeiro",
+    title: "Entendendo o Painel Financeiro",
+    difficulty: "intermediario",
+    content: `O painel financeiro é seu centro de controle de receitas, despesas e saldo.
+
+• O painel financeiro mostra 6 indicadores no topo:
+  - Receitas: total que você já recebeu no período
+  - Despesas: total que já gastou no período
+  - Saldo: receitas menos despesas (seu lucro operacional)
+  - A Receber: valores pendentes de clientes
+  - A Pagar: despesas pendentes
+  - Vencidos: quantos pagamentos estão atrasados (fique atenta a este número!)
+• O gráfico de barras mostra a evolução mensal de receitas vs. despesas
+• Use os filtros para ver por período, tipo, categoria ou status
+• As abas "Receitas", "Despesas", "Pendentes" e "Vencidos" filtram rapidamente
+
+Dica: verifique os "Vencidos" toda semana e entre em contato com os clientes devedores`,
+  },
+  {
+    id: 28,
+    category: "Contratos",
+    title: "Criando um Contrato",
+    difficulty: "basico",
+    content: `Acesse Contratos no menu lateral para criar contratos profissionais para suas festas.
+
+• Clique em "+ Novo Contrato" para criar do zero, ou "Gerar do Orçamento" para preencher automaticamente
+• Recomendação: sempre gere a partir do orçamento — ele preenche cliente, itens, valores e data automaticamente
+• Complete os dados obrigatórios:
+  - Dados do evento: data, horário, endereço, duração da festa
+  - Horário de montagem e desmontagem
+  - Dados do cliente: nome, CPF/CNPJ, endereço
+  - Valores: total, valor do sinal, data do sinal, valor restante, data do restante
+  - Forma de pagamento
+• A política de cancelamento já vem preenchida com um texto padrão — ajuste se necessário
+• Use o campo "Cláusulas adicionais" para termos específicos daquele evento
+
+Dica: sempre peça CPF/CNPJ do cliente para o contrato ter validade jurídica`,
+  },
+  {
+    id: 29,
+    category: "Contratos",
+    title: "Gerando PDF do Contrato",
+    difficulty: "basico",
+    content: `Gere PDFs profissionais dos seus contratos para enviar aos clientes.
+
+• Na lista de contratos, clique em "Gerar PDF" no contrato desejado
+• O PDF é gerado automaticamente com:
+  - Cabeçalho com nome da sua empresa
+  - Número do contrato (gerado automaticamente, ex: CTR-2026-001)
+  - Dados completos do contratante (cliente) e contratada (você)
+  - Cláusulas organizadas: objeto, data/local, montagem, serviços, valores, cancelamento
+  - Lista de todos os itens do orçamento vinculado
+  - Espaço para assinatura de ambas as partes
+• Envie o PDF para o cliente assinar (por e-mail, WhatsApp ou presencialmente)
+• Após assinatura, mude o status do contrato para "Assinado"
+
+Dica: a cor do contrato segue a cor accent configurada em Configurações — personalize com as cores da sua marca`,
+  },
+  {
+    id: 30,
+    category: "Contratos",
+    title: "Acompanhando o Status do Contrato",
+    difficulty: "basico",
+    content: `Acompanhe o ciclo de vida de cada contrato com o sistema de status.
+
+• Todo contrato passa por um fluxo de status:
+  - Rascunho: você está montando o contrato
+  - Enviado: mandou para o cliente analisar
+  - Assinado: cliente assinou o contrato
+  - Ativo: festa confirmada, contrato em vigor
+  - Concluído: festa realizada com sucesso
+  - Cancelado: contrato foi cancelado
+• Para mudar o status, clique no botão de status na lista de contratos
+• O ideal é: crie o contrato → envie para o cliente → ele assina → marque como ativo → após a festa, conclua
+
+Dica: nunca comece a preparar uma festa sem o contrato assinado — ele protege você e o cliente`,
+  },
+  {
+    id: 31,
+    category: "Contratos",
+    title: "Integrando Orçamento, Contrato e Financeiro",
+    difficulty: "intermediario",
+    content: `O fluxo completo integrado conecta orçamento, contrato e financeiro de ponta a ponta.
+
+1. Monte o orçamento com todos os itens e valores
+2. Envie o PDF do orçamento para o cliente
+3. Cliente aprovou? Mude o status para "Aprovado"
+4. Gere o contrato a partir do orçamento (botão "Gerar Contrato" no editor)
+5. Envie o contrato para assinatura
+6. Gere as parcelas de pagamento (botão "Registrar Pagamento" no editor, ou no Financeiro)
+7. Conforme receber, marque cada parcela como paga
+8. O Dashboard mostra tudo: faturamento, pendências e saldo
+
+• Tudo fica conectado: orçamento → contrato → pagamentos
+• No editor do orçamento, você vê badges indicando se já tem contrato gerado e pagamentos registrados
+
+Dica: siga esse fluxo para TODOS os eventos — é assim que você profissionaliza seu negócio`,
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -553,6 +709,8 @@ const categoryIcons: Record<string, React.ComponentType<{ className?: string }>>
   "Agenda e Operacional": Calendar,
   "Gestão e Financeiro": BarChart3,
   "Dicas Avançadas": Sparkles,
+  "Financeiro": DollarSign,
+  "Contratos": FileSignature,
 };
 
 const categories = [
@@ -564,6 +722,8 @@ const categories = [
   "Funil de Vendas",
   "Agenda e Operacional",
   "Gestão e Financeiro",
+  "Financeiro",
+  "Contratos",
   "Dicas Avançadas",
 ];
 
