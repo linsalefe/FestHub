@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
 
@@ -60,7 +59,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <motion.aside
         animate={{ width: collapsed ? 72 : 260 }}
         transition={{ duration: 0.2 }}
-        className="flex flex-col bg-[#2D3567] text-white shrink-0 overflow-hidden"
+        className="flex flex-col bg-white border-r border-[#E2E4EE] shrink-0 overflow-hidden"
       >
         {/* Logo */}
         <div className="flex items-center gap-2 px-4 h-16 shrink-0">
@@ -71,12 +70,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="font-[family-name:var(--font-quicksand)] text-xl font-bold"
-                style={{
-                  background: "linear-gradient(135deg, #E8A030, #D4A94E)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
+                className="font-[family-name:var(--font-quicksand)] text-xl font-bold text-[#4A5BA8]"
               >
                 Île Magique
               </motion.span>
@@ -84,7 +78,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
           </AnimatePresence>
         </div>
 
-        <Separator className="bg-white/10" />
+        <div className="h-px bg-[#E2E4EE]" />
 
         {/* New Budget button */}
         <div className="px-3 mt-4">
@@ -113,8 +107,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 title={collapsed ? item.label : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                   active
-                    ? "bg-[#4A5BA8]/30 text-[#E8A030]"
-                    : "text-[#C8D0E8] hover:text-white hover:bg-white/5"
+                    ? "bg-[#EEF0F8] text-[#4A5BA8] font-bold"
+                    : "text-[#7880A0] hover:text-[#4A5BA8] hover:bg-[#F5F6FA]"
                 }`}
               >
                 <item.icon className="h-5 w-5 shrink-0" />
@@ -122,7 +116,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 {!collapsed && item.href === "/budgets" && active && (
                   <Badge
                     variant="secondary"
-                    className="ml-auto bg-[#4A5BA8]/40 text-[#E8A030] text-xs"
+                    className="ml-auto bg-[#4A5BA8] text-white text-xs"
                   >
                     !
                   </Badge>
@@ -134,19 +128,19 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
         {/* User area */}
         <div className="px-3 pb-4 space-y-2">
-          <Separator className="bg-white/10" />
+          <div className="h-px bg-[#E2E4EE]" />
           <div className="flex items-center gap-2 px-2 py-2">
-            <Avatar className="h-8 w-8 bg-[#4A5BA8] shrink-0">
-              <AvatarFallback className="bg-[#4A5BA8] text-white text-xs">
+            <Avatar className="h-8 w-8 bg-[#EEF0F8] shrink-0">
+              <AvatarFallback className="bg-[#EEF0F8] text-[#4A5BA8] text-xs font-bold">
                 {user?.name?.charAt(0) || "A"}
               </AvatarFallback>
             </Avatar>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
+                <p className="text-sm font-medium text-[#1E2247] truncate">
                   {user?.name || "Admin"}
                 </p>
-                <p className="text-xs text-[#C8D0E8] truncate">
+                <p className="text-xs text-[#7880A0] truncate">
                   {user?.email}
                 </p>
               </div>
@@ -154,7 +148,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
             <button
               onClick={logout}
               title="Sair"
-              className="text-[#C8D0E8] hover:text-white shrink-0"
+              className="text-[#7880A0] hover:text-[#4A5BA8] shrink-0"
             >
               <LogOut className="h-4 w-4" />
             </button>
