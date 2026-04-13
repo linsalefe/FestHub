@@ -74,7 +74,7 @@ def list_budgets(status: str | None = None, client_id: int | None = None, db: Se
         query = query.filter(Budget.status == status)
     if client_id:
         query = query.filter(Budget.client_id == client_id)
-    budgets = query.order_by(Budget.created_at.desc()).unique().all()
+    budgets = query.order_by(Budget.created_at.desc()).all()
     return [_serialize_budget(b) for b in budgets]
 
 

@@ -20,6 +20,8 @@ import {
   Menu,
   LogOut,
   Plus,
+  DollarSign,
+  FileSignature,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -44,6 +46,8 @@ const navGroups: NavGroup[] = [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { href: "/pipeline", label: "Pipeline", icon: GitBranch },
       { href: "/budgets", label: "Orcamentos", icon: FileText },
+      { href: "/financeiro", label: "Financeiro", icon: DollarSign },
+      { href: "/contratos", label: "Contratos", icon: FileSignature },
       { href: "/calendar", label: "Agenda", icon: Calendar },
     ],
   },
@@ -69,6 +73,8 @@ const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
   "/pipeline": "Pipeline",
   "/budgets": "Orcamentos",
+  "/financeiro": "Financeiro",
+  "/contratos": "Contratos",
   "/calendar": "Agenda",
   "/catalog": "Catalogo",
   "/clients": "Clientes",

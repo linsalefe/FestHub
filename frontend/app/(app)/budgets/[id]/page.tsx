@@ -15,6 +15,9 @@ import {
   CheckSquare,
   Sparkles,
   Link,
+  FileSignature,
+  DollarSign,
+  ArrowUpRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -153,6 +156,10 @@ export default function BudgetEditorPage() {
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [generatingScenarios, setGeneratingScenarios] = useState(false);
 
+  // Transactions + Contract state
+  const [budgetTransactions, setBudgetTransactions] = useState<any[]>([]);
+  const [hasContract, setHasContract] = useState(false);
+
   const fetchBudget = useCallback(() => {
     api.get(`/api/budgets/${budgetId}`).then((r) => setBudget(r.data));
     api.get(`/api/budgets/${budgetId}/calculate`).then((r) => setCalc(r.data));
@@ -165,13 +172,22 @@ export default function BudgetEditorPage() {
       .catch(() => setChecklist([]));
   }, [budgetId]);
 
+  const fetchBudgetExtras = useCallback(() => {
+    api.get(`/api/transactions?budget_id=${budgetId}`).then((r) => setBudgetTransactions(r.data)).catch(() => {});
+    api.get(`/api/contracts?budget_id=${budgetId}`).then((r) => {
+      const contracts = r.data as any[];
+      setHasContract(contracts.some((c: any) => c.budget_id === parseInt(budgetId)));
+    }).catch(() => {});
+  }, [budgetId]);
+
   useEffect(() => {
     fetchBudget();
     fetchChecklist();
+    fetchBudgetExtras();
     api.get("/api/clients").then((r) => setClients(r.data));
     api.get("/api/themes").then((r) => setThemes(r.data));
     api.get("/api/catalog").then((r) => setCatalog(r.data));
-  }, [fetchBudget, fetchChecklist]);
+  }, [fetchBudget, fetchChecklist, fetchBudgetExtras]);
 
   const updateBudget = async (data: Record<string, unknown>) => {
     await api.put(`/api/budgets/${budgetId}`, data);
@@ -336,6 +352,27 @@ export default function BudgetEditorPage() {
       fetchChecklist();
     } catch {
       toast.error("Erro ao adicionar item");
+    }
+  };
+
+  const handleGenerateContract = async () => {
+    try {
+      const r = await api.post(`/api/contracts/from-budget/${budgetId}`);
+      toast.success("Contrato gerado com sucesso!");
+      setHasContract(true);
+      router.push(`/contratos`);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.detail || "Erro ao gerar contrato");
+    }
+  };
+
+  const handleRegisterPayment = async () => {
+    try {
+      await api.post(`/api/transactions/from-budget/${budgetId}`);
+      toast.success("Pagamentos registrados com sucesso!");
+      fetchBudgetExtras();
+    } catch {
+      toast.error("Erro ao registrar pagamento");
     }
   };
 
@@ -925,6 +962,72 @@ export default function BudgetEditorPage() {
               </CardContent>
             </Card>
           )}
+
+          {/* Contract & Payment Actions */}
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <FileSignature className="h-4 w-4 text-[#4A5BA8]" />
+                Contrato & Pagamento
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                {hasContract ? (
+                  <Badge className="bg-[#EEF7ED] text-[#5AAF50] text-xs">Contrato gerado</Badge>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleGenerateContract}
+                    className="w-full"
+                    style={{ borderRadius: 8 }}
+                  >
+                    <FileSignature className="h-4 w-4 mr-1" />
+                    Gerar Contrato
+                  </Button>
+                )}
+                {budgetTransactions.length > 0 ? (
+                  <Badge className="bg-[#EEF7ED] text-[#5AAF50] text-xs">Pagamento registrado</Badge>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleRegisterPayment}
+                    className="w-full"
+                    style={{ borderRadius: 8 }}
+                  >
+                    <DollarSign className="h-4 w-4 mr-1" />
+                    Registrar Pagamento
+                  </Button>
+                )}
+              </div>
+
+              {budgetTransactions.length > 0 && (
+                <div className="space-y-2 pt-2">
+                  <p className="text-xs font-medium text-[#7880A0]">Pagamentos</p>
+                  {budgetTransactions.map((t: any) => (
+                    <div key={t.id} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <ArrowUpRight className="h-3 w-3 text-[#5AAF50]" />
+                        <span className="text-[#1E2247] truncate max-w-[120px]">{t.description}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-[#5AAF50]">
+                          {(t.amount || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-medium ${
+                          t.status === "paid" ? "bg-[#EEF7ED] text-[#5AAF50]" : "bg-[#FFF8EC] text-[#D07840]"
+                        }`}>
+                          {t.status === "paid" ? "Pago" : "Pendente"}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

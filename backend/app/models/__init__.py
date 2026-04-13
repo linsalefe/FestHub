@@ -12,6 +12,8 @@ from app.models.package import Package, PackageItem
 from app.models.supplier import Supplier
 from app.models.calendar_event import CalendarEvent
 from app.models.checklist import ChecklistItem
+from app.models.transaction import Transaction
+from app.models.contract import Contract
 
 __all__ = [
     "Tenant",
@@ -32,4 +34,6 @@ __all__ = [
     "Supplier",
     "CalendarEvent",
     "ChecklistItem",
+    "Transaction",
+    "Contract",
 ]

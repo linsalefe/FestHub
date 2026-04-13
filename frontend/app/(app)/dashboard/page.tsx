@@ -191,6 +191,8 @@ export default function DashboardPage() {
   const [pipelineStages, setPipelineStages] = useState<PipelineStage[]>([]);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [financeSummary, setFinanceSummary] = useState<any>(null);
+  const [upcomingDue, setUpcomingDue] = useState<any[]>([]);
 
   /* Fetch all data */
   useEffect(() => {
@@ -223,6 +225,14 @@ export default function DashboardPage() {
         setLeads(items.slice(0, 5));
       })
       .catch(() => {});
+    api.get("/api/transactions/summary").then((r) => setFinanceSummary(r.data)).catch(() => {});
+    api.get("/api/transactions?status=pending").then((r) => {
+      const items = Array.isArray(r.data) ? r.data : [];
+      const sorted = items
+        .filter((t: any) => t.due_date)
+        .sort((a: any, b: any) => a.due_date.localeCompare(b.due_date));
+      setUpcomingDue(sorted.slice(0, 3));
+    }).catch(() => {});
   }, []);
 
   /* Derived */
@@ -620,6 +630,77 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* ------ Financeiro do Mes ------ */}
+      {financeSummary && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <Card className="border-[#E2E4EE] rounded-2xl shadow-sm bg-white">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-semibold text-[#1E2247] font-[family-name:var(--font-quicksand)]">
+                <DollarSign className="inline h-5 w-5 mr-2 text-[#5AAF50] -mt-0.5" />
+                Financeiro
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-[#7880A0]">Receitas (pagas)</span>
+                <span className="font-semibold text-[#5AAF50]">{formatCurrency(financeSummary.total_income)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-[#7880A0]">Despesas (pagas)</span>
+                <span className="font-semibold text-red-500">{formatCurrency(financeSummary.total_expense)}</span>
+              </div>
+              <div className="flex justify-between text-sm font-bold pt-1 border-t border-[#E2E4EE]">
+                <span className="text-[#1E2247]">Saldo</span>
+                <span className={financeSummary.balance >= 0 ? "text-[#5AAF50]" : "text-red-500"}>
+                  {formatCurrency(financeSummary.balance)}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-[#E2E4EE] rounded-2xl shadow-sm bg-white">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-semibold text-[#1E2247] font-[family-name:var(--font-quicksand)]">
+                A Receber
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="font-[family-name:var(--font-quicksand)] text-2xl font-bold text-[#D07840]">
+                {formatCurrency(financeSummary.pending_income)}
+              </p>
+              {financeSummary.overdue_count > 0 && (
+                <p className="text-xs text-red-500 mt-1">{financeSummary.overdue_count} vencido(s)</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="border-[#E2E4EE] rounded-2xl shadow-sm bg-white">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-semibold text-[#1E2247] font-[family-name:var(--font-quicksand)]">
+                Proximos Vencimentos
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {upcomingDue.length > 0 ? (
+                <div className="space-y-2">
+                  {upcomingDue.map((t: any) => (
+                    <div key={t.id} className="flex items-center justify-between text-sm">
+                      <span className="text-[#1E2247] truncate max-w-[140px]">{t.description}</span>
+                      <div className="text-right">
+                        <span className="font-semibold text-[#4A5BA8]">{formatCurrency(t.amount)}</span>
+                        <p className="text-[10px] text-[#7880A0]">{formatShortDate(t.due_date)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-[#7880A0]">Nenhum vencimento proximo</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* ------ Quick Actions ------ */}
       <div>
