@@ -22,11 +22,11 @@ interface Budget {
 }
 
 const statusMap: Record<string, { label: string; color: string }> = {
-  draft: { label: "Rascunho", color: "bg-stone-200 text-stone-700" },
-  sent: { label: "Enviado", color: "bg-blue-100 text-blue-700" },
-  approved: { label: "Aprovado", color: "bg-emerald-100 text-emerald-700" },
-  paid: { label: "Pago", color: "bg-amber-100 text-amber-700" },
-  done: { label: "Realizado", color: "bg-purple-100 text-purple-700" },
+  draft: { label: "Rascunho", color: "bg-[#F0F1F6] text-[#7880A0]" },
+  sent: { label: "Enviado", color: "bg-[#F0F4FA] text-[#7B9ACC]" },
+  approved: { label: "Aprovado", color: "bg-[#EEF7ED] text-[#5AAF50]" },
+  paid: { label: "Pago", color: "bg-[#EEF0F8] text-[#4A5BA8]" },
+  done: { label: "Realizado", color: "bg-[#FFF8EC] text-[#E8A030]" },
 };
 
 const filterOptions = [
@@ -81,8 +81,8 @@ export default function BudgetsPage() {
               onClick={() => setFilter(opt.value)}
               className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                 filter === opt.value
-                  ? "bg-amber-600 text-white"
-                  : "bg-white text-stone-600 border border-[#E7E5E4] hover:bg-stone-50"
+                  ? "bg-[#4A5BA8] text-white"
+                  : "bg-white text-[#7880A0] border border-[#E2E4EE] hover:bg-[#F0F1F6]"
               }`}
               style={{ borderRadius: 8 }}
             >
@@ -94,7 +94,7 @@ export default function BudgetsPage() {
           onClick={handleCreate}
           className="text-white font-semibold"
           style={{
-            background: "linear-gradient(135deg, #FBBF24, #D97706)",
+            background: "linear-gradient(135deg, #E8A030, #D07840)",
             borderRadius: 8,
           }}
         >
@@ -103,11 +103,11 @@ export default function BudgetsPage() {
       </div>
 
       {budgets.length === 0 ? (
-        <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+        <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
           <CardContent className="py-16 text-center">
-            <FileText className="h-12 w-12 text-stone-300 mx-auto mb-4" />
-            <p className="text-stone-500 font-medium">Nenhum orcamento encontrado</p>
-            <p className="text-sm text-stone-400 mt-1">
+            <FileText className="h-12 w-12 text-[#E2E4EE] mx-auto mb-4" />
+            <p className="text-[#7880A0] font-medium">Nenhum orcamento encontrado</p>
+            <p className="text-sm text-[#7880A0] mt-1">
               Crie seu primeiro orcamento clicando no botao acima
             </p>
           </CardContent>
@@ -119,7 +119,7 @@ export default function BudgetsPage() {
             return (
               <Card
                 key={b.id}
-                className="border-[#E7E5E4] cursor-pointer hover:shadow-md transition-shadow"
+                className="border-[#E2E4EE] cursor-pointer hover:shadow-md transition-shadow"
                 style={{ borderRadius: 12 }}
                 onClick={() => router.push(`/budgets/${b.id}`)}
               >
@@ -128,21 +128,21 @@ export default function BudgetsPage() {
                     <Badge className={`${sm.color} border-0`} style={{ borderRadius: 6 }}>
                       {sm.label}
                     </Badge>
-                    <span className="text-xs text-stone-400">#{b.id}</span>
+                    <span className="text-xs text-[#7880A0]">#{b.id}</span>
                   </div>
 
                   <div>
-                    <p className="font-semibold text-stone-800">
+                    <p className="font-semibold text-[#1E2247]">
                       {b.client?.name || "Sem cliente"}
                     </p>
                     {b.theme && (
-                      <p className="text-sm text-stone-500">
+                      <p className="text-sm text-[#7880A0]">
                         {b.theme.emoji} {b.theme.name}
                       </p>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-4 text-xs text-stone-400">
+                  <div className="flex items-center gap-4 text-xs text-[#7880A0]">
                     <span>{b.items.length} itens</span>
                     {b.event_date && (
                       <span className="flex items-center gap-1">
@@ -152,20 +152,20 @@ export default function BudgetsPage() {
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-[#E7E5E4]">
-                    <span className="text-lg font-bold text-stone-800">
+                  <div className="flex items-center justify-between pt-2 border-t border-[#E2E4EE]">
+                    <span className="text-lg font-bold text-[#1E2247]">
                       {formatCurrency(b.total_cached)}
                     </span>
                     <div className="flex gap-1">
                       <button
                         onClick={(e) => handleDuplicate(b.id, e)}
-                        className="p-1.5 text-stone-400 hover:text-blue-600 rounded"
+                        className="p-1.5 text-[#7880A0] hover:text-[#4A5BA8] rounded"
                       >
                         <Copy className="h-4 w-4" />
                       </button>
                       <button
                         onClick={(e) => handleDelete(b.id, e)}
-                        className="p-1.5 text-stone-400 hover:text-red-600 rounded"
+                        className="p-1.5 text-[#7880A0] hover:text-red-600 rounded"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

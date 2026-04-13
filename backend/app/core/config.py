@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     JWT_REFRESH_TOKEN_EXPIRE_DAYS: int = 30
     CORS_ORIGINS: str = "http://localhost:3000"
     UPLOAD_DIR: str = "uploads"
-    APP_NAME: str = "FestHub"
+    APP_NAME: str = "Île Magique"
 
     @property
     def cors_origins_list(self) -> list[str]:

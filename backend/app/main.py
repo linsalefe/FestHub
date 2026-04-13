@@ -35,4 +35,4 @@ app.include_router(settings_routes.router)
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "app": "FestHub"}
+    return {"status": "ok", "app": "Île Magique"}

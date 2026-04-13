@@ -27,14 +27,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("festhub_token");
+    const token = localStorage.getItem("ilemagique_token");
     if (token) {
       api
         .get("/api/auth/me")
         .then((res) => setUser(res.data))
         .catch(() => {
-          localStorage.removeItem("festhub_token");
-          localStorage.removeItem("festhub_user");
+          localStorage.removeItem("ilemagique_token");
+          localStorage.removeItem("ilemagique_user");
         })
         .finally(() => setLoading(false));
     } else {
@@ -44,15 +44,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const res = await api.post("/api/auth/login", { email, password });
-    localStorage.setItem("festhub_token", res.data.access_token);
-    localStorage.setItem("festhub_user", JSON.stringify(res.data.user));
+    localStorage.setItem("ilemagique_token", res.data.access_token);
+    localStorage.setItem("ilemagique_user", JSON.stringify(res.data.user));
     setUser(res.data.user);
     router.push("/dashboard");
   };
 
   const logout = () => {
-    localStorage.removeItem("festhub_token");
-    localStorage.removeItem("festhub_user");
+    localStorage.removeItem("ilemagique_token");
+    localStorage.removeItem("ilemagique_user");
     setUser(null);
     router.push("/login");
   };

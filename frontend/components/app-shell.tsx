@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -45,7 +46,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
   const title =
     pageTitles[pathname] ||
-    (pathname.startsWith("/budgets/") ? "Editor de Orcamento" : "FestHub");
+    (pathname.startsWith("/budgets/") ? "Editor de Orcamento" : "Île Magique");
   const today = new Date().toLocaleDateString("pt-BR", {
     weekday: "long",
     day: "numeric",
@@ -59,20 +60,25 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <motion.aside
         animate={{ width: collapsed ? 72 : 260 }}
         transition={{ duration: 0.2 }}
-        className="flex flex-col bg-[#1C1917] text-white shrink-0 overflow-hidden"
+        className="flex flex-col bg-[#2D3567] text-white shrink-0 overflow-hidden"
       >
         {/* Logo */}
         <div className="flex items-center gap-2 px-4 h-16 shrink-0">
-          <span className="text-2xl">🎉</span>
+          <Image src="/logo.png" alt="Île Magique" width={32} height={32} />
           <AnimatePresence>
             {!collapsed && (
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="font-[family-name:var(--font-playfair)] text-xl font-bold text-amber-400"
+                className="font-[family-name:var(--font-quicksand)] text-xl font-bold"
+                style={{
+                  background: "linear-gradient(135deg, #E8A030, #D4A94E)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
               >
-                FestHub
+                Île Magique
               </motion.span>
             )}
           </AnimatePresence>
@@ -86,7 +92,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
             onClick={() => router.push("/budgets")}
             className="w-full text-white font-semibold"
             style={{
-              background: "linear-gradient(135deg, #FBBF24, #D97706)",
+              background: "linear-gradient(135deg, #E8A030, #D07840)",
             }}
           >
             <Plus className="h-4 w-4 mr-1" />
@@ -107,8 +113,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 title={collapsed ? item.label : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                   active
-                    ? "bg-amber-600/20 text-amber-400"
-                    : "text-stone-400 hover:text-white hover:bg-white/5"
+                    ? "bg-[#4A5BA8]/30 text-[#E8A030]"
+                    : "text-[#C8D0E8] hover:text-white hover:bg-white/5"
                 }`}
               >
                 <item.icon className="h-5 w-5 shrink-0" />
@@ -116,7 +122,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 {!collapsed && item.href === "/budgets" && active && (
                   <Badge
                     variant="secondary"
-                    className="ml-auto bg-amber-600/30 text-amber-400 text-xs"
+                    className="ml-auto bg-[#4A5BA8]/40 text-[#E8A030] text-xs"
                   >
                     !
                   </Badge>
@@ -130,8 +136,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
         <div className="px-3 pb-4 space-y-2">
           <Separator className="bg-white/10" />
           <div className="flex items-center gap-2 px-2 py-2">
-            <Avatar className="h-8 w-8 bg-amber-600 shrink-0">
-              <AvatarFallback className="bg-amber-600 text-white text-xs">
+            <Avatar className="h-8 w-8 bg-[#4A5BA8] shrink-0">
+              <AvatarFallback className="bg-[#4A5BA8] text-white text-xs">
                 {user?.name?.charAt(0) || "A"}
               </AvatarFallback>
             </Avatar>
@@ -140,7 +146,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 <p className="text-sm font-medium truncate">
                   {user?.name || "Admin"}
                 </p>
-                <p className="text-xs text-stone-400 truncate">
+                <p className="text-xs text-[#C8D0E8] truncate">
                   {user?.email}
                 </p>
               </div>
@@ -148,7 +154,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
             <button
               onClick={logout}
               title="Sair"
-              className="text-stone-400 hover:text-white shrink-0"
+              className="text-[#C8D0E8] hover:text-white shrink-0"
             >
               <LogOut className="h-4 w-4" />
             </button>
@@ -159,11 +165,11 @@ export default function AppShell({ children }: { children: ReactNode }) {
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-[#E7E5E4] shrink-0">
+        <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-[#E2E4EE] shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="text-stone-500 hover:text-stone-800"
+              className="text-[#7880A0] hover:text-[#1E2247]"
             >
               {collapsed ? (
                 <Menu className="h-5 w-5" />
@@ -171,11 +177,11 @@ export default function AppShell({ children }: { children: ReactNode }) {
                 <PanelLeftClose className="h-5 w-5" />
               )}
             </button>
-            <h1 className="font-[family-name:var(--font-playfair)] text-xl font-bold text-stone-800">
+            <h1 className="font-[family-name:var(--font-quicksand)] text-xl font-bold text-[#1E2247]">
               {title}
             </h1>
           </div>
-          <span className="text-sm text-stone-500 capitalize">{today}</span>
+          <span className="text-sm text-[#7880A0] capitalize">{today}</span>
         </header>
 
         {/* Content */}

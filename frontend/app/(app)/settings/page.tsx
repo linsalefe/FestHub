@@ -78,7 +78,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 max-w-3xl">
       {/* Parameters */}
-      <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+      <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
         <CardHeader>
           <CardTitle className="text-lg">Parametros</CardTitle>
         </CardHeader>
@@ -87,7 +87,7 @@ export default function SettingsPage() {
             <>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <Label className="text-xs text-stone-500">Impostos (%)</Label>
+                  <Label className="text-xs text-[#7880A0]">Impostos (%)</Label>
                   <Input
                     type="number"
                     step="0.1"
@@ -99,7 +99,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-stone-500">Margem desejada (%)</Label>
+                  <Label className="text-xs text-[#7880A0]">Margem desejada (%)</Label>
                   <Input
                     type="number"
                     step="0.1"
@@ -111,7 +111,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-stone-500">Festas / mes</Label>
+                  <Label className="text-xs text-[#7880A0]">Festas / mes</Label>
                   <Input
                     type="number"
                     value={settings.events_per_month}
@@ -125,7 +125,14 @@ export default function SettingsPage() {
                   />
                 </div>
               </div>
-              <Button onClick={saveSettings} className="bg-amber-600 hover:bg-amber-700" style={{ borderRadius: 8 }}>
+              <Button
+                onClick={saveSettings}
+                style={{
+                  background: "linear-gradient(135deg, #E8A030, #D07840)",
+                  borderRadius: 8,
+                }}
+                className="text-white font-semibold"
+              >
                 <Save className="h-4 w-4 mr-1" /> Salvar
               </Button>
             </>
@@ -134,17 +141,17 @@ export default function SettingsPage() {
       </Card>
 
       {/* Fixed Costs */}
-      <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+      <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
         <CardHeader>
           <CardTitle className="text-lg">Custos Fixos</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {fixedCosts.map((fc) => (
-            <div key={fc.id} className="flex items-center justify-between py-2 border-b border-[#E7E5E4] last:border-0">
-              <span className="text-sm text-stone-700">{fc.name}</span>
+            <div key={fc.id} className="flex items-center justify-between py-2 border-b border-[#E2E4EE] last:border-0">
+              <span className="text-sm text-[#1E2247]">{fc.name}</span>
               <div className="flex items-center gap-3">
                 <span className="text-sm font-medium">{formatCurrency(fc.value)}</span>
-                <button onClick={() => deleteFixedCost(fc.id)} className="text-stone-400 hover:text-red-500">
+                <button onClick={() => deleteFixedCost(fc.id)} className="text-[#7880A0] hover:text-red-500">
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
@@ -176,12 +183,12 @@ export default function SettingsPage() {
           <Separator />
 
           <div className="flex justify-between text-sm">
-            <span className="text-stone-500">Total custos fixos / mes</span>
+            <span className="text-[#7880A0]">Total custos fixos / mes</span>
             <span className="font-bold">{formatCurrency(totalFixed)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-stone-500">Rateio por festa</span>
-            <span className="font-bold text-amber-600">{formatCurrency(perEvent)}</span>
+            <span className="text-[#7880A0]">Rateio por festa</span>
+            <span className="font-bold text-[#4A5BA8]">{formatCurrency(perEvent)}</span>
           </div>
         </CardContent>
       </Card>

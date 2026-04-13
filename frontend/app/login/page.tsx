@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,15 +28,17 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FDFAF6]">
-      <Card className="w-full max-w-md border-[#E7E5E4] shadow-lg" style={{ borderRadius: 12 }}>
+    <div className="min-h-screen flex items-center justify-center bg-[#FAFBFE]">
+      <Card className="w-full max-w-md border-[#E2E4EE] shadow-lg" style={{ borderRadius: 12 }}>
         <CardHeader className="text-center pb-2">
-          <div className="text-5xl mb-2">🎉</div>
-          <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-stone-800">
-            FestHub
+          <div className="flex justify-center mb-2">
+            <Image src="/logo.png" alt="Île Magique" width={64} height={64} />
+          </div>
+          <h1 className="font-[family-name:var(--font-quicksand)] text-3xl font-bold text-[#1E2247]">
+            Île Magique
           </h1>
-          <p className="text-stone-500 text-sm">
-            Gestao inteligente de orcamentos
+          <p className="text-[#7880A0] text-sm">
+            Gestão inteligente de festas
           </p>
         </CardHeader>
         <CardContent>
@@ -45,7 +48,7 @@ function LoginForm() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@festhub.com"
+                placeholder="admin@ilemagique.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -68,7 +71,7 @@ function LoginForm() {
               type="submit"
               className="w-full text-white font-semibold"
               style={{
-                background: "linear-gradient(135deg, #FBBF24, #D97706)",
+                background: "linear-gradient(135deg, #E8A030, #D07840)",
                 borderRadius: 8,
               }}
               disabled={loading}

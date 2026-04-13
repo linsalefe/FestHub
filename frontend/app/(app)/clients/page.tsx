@@ -62,7 +62,7 @@ export default function ClientsPage() {
           onClick={() => setShowForm(!showForm)}
           className="text-white font-semibold"
           style={{
-            background: "linear-gradient(135deg, #FBBF24, #D97706)",
+            background: "linear-gradient(135deg, #E8A030, #D07840)",
             borderRadius: 8,
           }}
         >
@@ -72,7 +72,7 @@ export default function ClientsPage() {
       </div>
 
       {showForm && (
-        <Card className="border-amber-200 bg-amber-50/50" style={{ borderRadius: 12 }}>
+        <Card className="border-[#4A5BA8]/30 bg-[#EEF0F8]" style={{ borderRadius: 12 }}>
           <CardContent className="pt-6">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div>
@@ -92,7 +92,7 @@ export default function ClientsPage() {
                 <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} style={{ borderRadius: 8 }} />
               </div>
               <div className="flex items-end">
-                <Button onClick={handleCreate} className="w-full bg-emerald-600 hover:bg-emerald-700" style={{ borderRadius: 8 }}>
+                <Button onClick={handleCreate} className="w-full bg-[#5AAF50] hover:bg-[#4A9F40]" style={{ borderRadius: 8 }}>
                   <Check className="h-4 w-4 mr-1" /> Salvar
                 </Button>
               </div>
@@ -103,36 +103,36 @@ export default function ClientsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {clients.map((client) => (
-          <Card key={client.id} className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+          <Card key={client.id} className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
             <CardContent className="pt-5 pb-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10 bg-amber-100">
-                    <AvatarFallback className="bg-amber-100 text-amber-700 font-bold">
+                  <Avatar className="h-10 w-10 bg-[#EEF0F8]">
+                    <AvatarFallback className="bg-[#EEF0F8] text-[#4A5BA8] font-bold">
                       {client.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold text-stone-800">{client.name}</p>
+                    <p className="font-semibold text-[#1E2247]">{client.name}</p>
                     {client.city && (
-                      <p className="text-xs text-stone-400 flex items-center gap-1">
+                      <p className="text-xs text-[#7880A0] flex items-center gap-1">
                         <MapPin className="h-3 w-3" /> {client.city}
                       </p>
                     )}
                   </div>
                 </div>
-                <button onClick={() => handleDelete(client.id)} className="text-stone-400 hover:text-red-500">
+                <button onClick={() => handleDelete(client.id)} className="text-[#7880A0] hover:text-red-500">
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
               <div className="mt-3 space-y-1">
                 {client.phone && (
-                  <p className="text-sm text-stone-500 flex items-center gap-2">
+                  <p className="text-sm text-[#7880A0] flex items-center gap-2">
                     <Phone className="h-3.5 w-3.5" /> {client.phone}
                   </p>
                 )}
                 {client.email && (
-                  <p className="text-sm text-stone-500 flex items-center gap-2">
+                  <p className="text-sm text-[#7880A0] flex items-center gap-2">
                     <Mail className="h-3.5 w-3.5" /> {client.email}
                   </p>
                 )}

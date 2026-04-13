@@ -93,11 +93,11 @@ interface Calculation {
 }
 
 const statuses = [
-  { value: "draft", label: "Rascunho", color: "bg-stone-200 text-stone-700" },
-  { value: "sent", label: "Enviado", color: "bg-blue-100 text-blue-700" },
-  { value: "approved", label: "Aprovado", color: "bg-emerald-100 text-emerald-700" },
-  { value: "paid", label: "Pago", color: "bg-amber-100 text-amber-700" },
-  { value: "done", label: "Realizado", color: "bg-purple-100 text-purple-700" },
+  { value: "draft", label: "Rascunho", color: "bg-[#F0F1F6] text-[#7880A0]" },
+  { value: "sent", label: "Enviado", color: "bg-[#F0F4FA] text-[#7B9ACC]" },
+  { value: "approved", label: "Aprovado", color: "bg-[#EEF7ED] text-[#5AAF50]" },
+  { value: "paid", label: "Pago", color: "bg-[#EEF0F8] text-[#4A5BA8]" },
+  { value: "done", label: "Realizado", color: "bg-[#FFF8EC] text-[#E8A030]" },
 ];
 
 export default function BudgetEditorPage() {
@@ -194,7 +194,7 @@ export default function BudgetEditorPage() {
   if (!budget) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-stone-400">Carregando...</p>
+        <p className="text-[#7880A0]">Carregando...</p>
       </div>
     );
   }
@@ -210,11 +210,11 @@ export default function BudgetEditorPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push("/budgets")}
-            className="text-stone-400 hover:text-stone-600"
+            className="text-[#7880A0] hover:text-[#1E2247]"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h2 className="text-xl font-bold text-stone-800">
+          <h2 className="text-xl font-bold text-[#1E2247]">
             Orcamento #{budget.id}
           </h2>
         </div>
@@ -225,8 +225,8 @@ export default function BudgetEditorPage() {
               onClick={() => changeStatus(s.value)}
               className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
                 budget.status === s.value
-                  ? s.color + " ring-2 ring-offset-1 ring-stone-300"
-                  : "bg-stone-100 text-stone-400 hover:bg-stone-200"
+                  ? s.color + " ring-2 ring-offset-1 ring-[#E2E4EE]"
+                  : "bg-[#F0F1F6] text-[#7880A0] hover:bg-[#E2E4EE]"
               }`}
             >
               {s.label}
@@ -239,16 +239,16 @@ export default function BudgetEditorPage() {
         {/* Left column - Editor */}
         <div className="lg:col-span-2 space-y-4">
           {/* Event Data */}
-          <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Dados do Evento</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-stone-500">Cliente</Label>
+                  <Label className="text-xs text-[#7880A0]">Cliente</Label>
                   <select
-                    className="w-full mt-1 px-3 py-2 border border-[#E7E5E4] rounded-lg text-sm bg-white"
+                    className="w-full mt-1 px-3 py-2 border border-[#E2E4EE] rounded-lg text-sm bg-white"
                     value={budget.client_id || ""}
                     onChange={(e) =>
                       updateBudget({
@@ -265,7 +265,7 @@ export default function BudgetEditorPage() {
                   </select>
                 </div>
                 <div>
-                  <Label className="text-xs text-stone-500">Data do Evento</Label>
+                  <Label className="text-xs text-[#7880A0]">Data do Evento</Label>
                   <Input
                     type="date"
                     className="mt-1"
@@ -277,9 +277,9 @@ export default function BudgetEditorPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-stone-500">Tema</Label>
+                  <Label className="text-xs text-[#7880A0]">Tema</Label>
                   <select
-                    className="w-full mt-1 px-3 py-2 border border-[#E7E5E4] rounded-lg text-sm bg-white"
+                    className="w-full mt-1 px-3 py-2 border border-[#E2E4EE] rounded-lg text-sm bg-white"
                     value={budget.theme_id || ""}
                     onChange={(e) =>
                       updateBudget({
@@ -296,7 +296,7 @@ export default function BudgetEditorPage() {
                   </select>
                 </div>
                 <div>
-                  <Label className="text-xs text-stone-500">Condicao de Pagamento</Label>
+                  <Label className="text-xs text-[#7880A0]">Condicao de Pagamento</Label>
                   <Input
                     className="mt-1"
                     value={budget.payment_condition}
@@ -309,7 +309,7 @@ export default function BudgetEditorPage() {
           </Card>
 
           {/* Budget Items */}
-          <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">Itens do Orcamento</CardTitle>
@@ -338,15 +338,15 @@ export default function BudgetEditorPage() {
             <CardContent>
               {/* Catalog Picker */}
               {showCatalog && (
-                <div className="mb-4 p-4 bg-stone-50 rounded-lg border border-[#E7E5E4]">
+                <div className="mb-4 p-4 bg-[#EEF0F8] rounded-lg border border-[#E2E4EE]">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-medium text-stone-700">Adicionar do catalogo</p>
+                    <p className="text-sm font-medium text-[#1E2247]">Adicionar do catalogo</p>
                     <button onClick={() => setShowCatalog(false)}>
-                      <X className="h-4 w-4 text-stone-400" />
+                      <X className="h-4 w-4 text-[#7880A0]" />
                     </button>
                   </div>
                   <div className="relative mb-3">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-stone-400" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#7880A0]" />
                     <Input
                       placeholder="Buscar item..."
                       className="pl-9"
@@ -360,10 +360,10 @@ export default function BudgetEditorPage() {
                       <button
                         key={item.id}
                         onClick={() => addCatalogItem(item)}
-                        className="flex items-center justify-between p-2 bg-white rounded-lg border border-[#E7E5E4] hover:border-amber-400 text-left text-sm"
+                        className="flex items-center justify-between p-2 bg-white rounded-lg border border-[#E2E4EE] hover:border-[#4A5BA8] text-left text-sm"
                       >
                         <span className="truncate">{item.name}</span>
-                        <span className="text-xs text-stone-400 ml-2 shrink-0">
+                        <span className="text-xs text-[#7880A0] ml-2 shrink-0">
                           {formatCurrency(item.price)}
                         </span>
                       </button>
@@ -374,12 +374,12 @@ export default function BudgetEditorPage() {
 
               {/* Items table */}
               {budget.items.length === 0 ? (
-                <p className="text-sm text-stone-400 text-center py-8">
+                <p className="text-sm text-[#7880A0] text-center py-8">
                   Nenhum item adicionado
                 </p>
               ) : (
                 <div className="space-y-2">
-                  <div className="grid grid-cols-12 gap-2 text-xs text-stone-500 font-medium px-2">
+                  <div className="grid grid-cols-12 gap-2 text-xs text-[#7880A0] font-medium px-2">
                     <span className="col-span-4">Nome</span>
                     <span className="col-span-2">Qtd</span>
                     <span className="col-span-2">Custo</span>
@@ -390,7 +390,7 @@ export default function BudgetEditorPage() {
                   {budget.items.map((item) => (
                     <div
                       key={item.id}
-                      className="grid grid-cols-12 gap-2 items-center bg-stone-50 px-2 py-2 rounded-lg"
+                      className="grid grid-cols-12 gap-2 items-center bg-[#F0F1F6] px-2 py-2 rounded-lg"
                     >
                       <Input
                         className="col-span-4 h-8 text-sm"
@@ -428,12 +428,12 @@ export default function BudgetEditorPage() {
                         }
                         style={{ borderRadius: 6 }}
                       />
-                      <span className="col-span-1 text-xs text-stone-600 font-medium">
+                      <span className="col-span-1 text-xs text-[#7880A0] font-medium">
                         {formatCurrency(item.price * item.quantity)}
                       </span>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="col-span-1 text-stone-400 hover:text-red-500"
+                        className="col-span-1 text-[#7880A0] hover:text-red-500"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -445,18 +445,18 @@ export default function BudgetEditorPage() {
           </Card>
 
           {/* Variable Costs */}
-          <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Despesas Variaveis</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {budget.variable_costs.map((vc) => (
                 <div key={vc.id} className="flex items-center gap-2">
-                  <span className="text-sm text-stone-700 flex-1">{vc.name}</span>
+                  <span className="text-sm text-[#1E2247] flex-1">{vc.name}</span>
                   <span className="text-sm font-medium">{formatCurrency(vc.value)}</span>
                   <button
                     onClick={() => removeVariableCost(vc.id)}
-                    className="text-stone-400 hover:text-red-500"
+                    className="text-[#7880A0] hover:text-red-500"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -492,7 +492,7 @@ export default function BudgetEditorPage() {
           </Card>
 
           {/* Notes */}
-          <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Observacoes</CardTitle>
             </CardHeader>
@@ -511,36 +511,36 @@ export default function BudgetEditorPage() {
         {/* Right column - Summary */}
         <div className="space-y-4 lg:sticky lg:top-6 self-start">
           {/* Total */}
-          <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
             <CardContent className="pt-6 space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-stone-500">Subtotal</span>
+                  <span className="text-[#7880A0]">Subtotal</span>
                   <span>{calc ? formatCurrency(calc.subtotal) : "..."}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-stone-500">
+                  <span className="text-[#7880A0]">
                     Impostos ({calc?.tax_rate ?? 0}%)
                   </span>
                   <span>{calc ? formatCurrency(calc.tax_value) : "..."}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-stone-500">Desconto</span>
+                  <span className="text-[#7880A0]">Desconto</span>
                   <span className="text-red-500">
                     -{calc ? formatCurrency(calc.discount) : "..."}
                   </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-baseline">
-                  <span className="text-lg font-bold text-stone-800">TOTAL</span>
-                  <span className="text-2xl font-bold text-amber-600">
+                  <span className="text-lg font-bold text-[#1E2247]">TOTAL</span>
+                  <span className="text-2xl font-bold text-[#4A5BA8]">
                     {calc ? formatCurrency(calc.total) : "..."}
                   </span>
                 </div>
               </div>
 
               <div>
-                <Label className="text-xs text-stone-500">Desconto (R$)</Label>
+                <Label className="text-xs text-[#7880A0]">Desconto (R$)</Label>
                 <Input
                   type="number"
                   step="0.01"
@@ -556,27 +556,27 @@ export default function BudgetEditorPage() {
           </Card>
 
           {/* Cost Analysis */}
-          <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Analise de Custos</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-stone-500">Custo dos itens</span>
+                <span className="text-[#7880A0]">Custo dos itens</span>
                 <span>{calc ? formatCurrency(calc.items_cost) : "..."}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-stone-500">Despesas variaveis</span>
+                <span className="text-[#7880A0]">Despesas variaveis</span>
                 <span>{calc ? formatCurrency(calc.variable_total) : "..."}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-stone-500">Custos fixos (rateio)</span>
+                <span className="text-[#7880A0]">Custos fixos (rateio)</span>
                 <span>
                   {calc ? formatCurrency(calc.fixed_cost_per_event) : "..."}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-stone-500">Impostos</span>
+                <span className="text-[#7880A0]">Impostos</span>
                 <span>{calc ? formatCurrency(calc.tax_value) : "..."}</span>
               </div>
               <Separator />
@@ -591,28 +591,28 @@ export default function BudgetEditorPage() {
           {calc && (
             <Card
               className={`border-2 ${
-                calc.profit >= 0 ? "border-emerald-200 bg-emerald-50" : "border-red-200 bg-red-50"
+                calc.profit >= 0 ? "border-[#5AAF50]/30 bg-[#EEF7ED]" : "border-red-200 bg-red-50"
               }`}
               style={{ borderRadius: 12 }}
             >
               <CardContent className="pt-6 text-center">
-                <p className="text-sm text-stone-500">Lucro Estimado</p>
+                <p className="text-sm text-[#7880A0]">Lucro Estimado</p>
                 <p
                   className={`text-2xl font-bold ${
-                    calc.profit >= 0 ? "text-emerald-600" : "text-red-600"
+                    calc.profit >= 0 ? "text-[#5AAF50]" : "text-red-600"
                   }`}
                 >
                   {formatCurrency(calc.profit)}
                 </p>
                 <p
                   className={`text-sm font-medium ${
-                    calc.profit >= 0 ? "text-emerald-500" : "text-red-500"
+                    calc.profit >= 0 ? "text-[#5AAF50]" : "text-red-500"
                   }`}
                 >
                   Margem: {formatPercent(calc.margin_real)}
                 </p>
                 {calc.margin_real < 20 && calc.margin_real > 0 && (
-                  <div className="mt-3 flex items-center justify-center gap-1 text-amber-600 text-xs">
+                  <div className="mt-3 flex items-center justify-center gap-1 text-[#D07840] text-xs">
                     <AlertTriangle className="h-3 w-3" />
                     Margem abaixo de 20%
                   </div>

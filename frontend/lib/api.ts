@@ -6,7 +6,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("festhub_token");
+    const token = localStorage.getItem("ilemagique_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -18,8 +18,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
-      localStorage.removeItem("festhub_token");
-      localStorage.removeItem("festhub_user");
+      localStorage.removeItem("ilemagique_token");
+      localStorage.removeItem("ilemagique_user");
       if (!window.location.pathname.includes("/login")) {
         window.location.href = "/login";
       }

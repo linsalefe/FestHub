@@ -15,7 +15,7 @@ db = SessionLocal()
 
 try:
     # Tenant
-    tenant = Tenant(name="Decoração Demo", slug="demo", is_active=True)
+    tenant = Tenant(name="Île Magique Demo", slug="demo", is_active=True)
     db.add(tenant)
     db.flush()
 
@@ -25,7 +25,7 @@ try:
         tax_rate=6,
         profit_margin=40,
         events_per_month=8,
-        company_name="Minha Decoração",
+        company_name="Île Magique",
     )
     db.add(ts)
 
@@ -33,8 +33,8 @@ try:
     admin = User(
         tenant_id=tenant.id,
         name="Administrador",
-        email="admin@festhub.com",
-        password_hash=hash_password("festhub2026"),
+        email="admin@ilemagique.com",
+        password_hash=hash_password("ilemagique2026"),
         role="admin",
     )
     db.add(admin)
@@ -57,7 +57,7 @@ try:
 
     # Themes
     themes = [
-        ("Safari", "#B45309", "🦁"),
+        ("Safari", "#E8A030", "🦁"),
         ("Fundo do Mar", "#0284C7", "🐠"),
         ("Circo", "#DC2626", "🎪"),
         ("Princesas", "#DB2777", "👑"),

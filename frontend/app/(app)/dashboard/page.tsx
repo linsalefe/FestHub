@@ -43,11 +43,11 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  draft: "bg-stone-300",
-  sent: "bg-blue-400",
-  approved: "bg-emerald-400",
-  paid: "bg-amber-400",
-  done: "bg-purple-400",
+  draft: "bg-[#7880A0]",
+  sent: "bg-[#7B9ACC]",
+  approved: "bg-[#5AAF50]",
+  paid: "bg-[#4A5BA8]",
+  done: "bg-[#E8A030]",
 };
 
 export default function DashboardPage() {
@@ -71,14 +71,14 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-stone-800">
+        <h2 className="text-2xl font-bold text-[#1E2247]">
           {greeting}! ✨
         </h2>
         <Button
           onClick={() => router.push("/budgets")}
           className="text-white font-semibold"
           style={{
-            background: "linear-gradient(135deg, #FBBF24, #D97706)",
+            background: "linear-gradient(135deg, #E8A030, #D07840)",
             borderRadius: 8,
           }}
         >
@@ -88,68 +88,68 @@ export default function DashboardPage() {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+        <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-500">Faturamento</p>
-                <p className="text-2xl font-bold text-stone-800">
+                <p className="text-sm text-[#7880A0]">Faturamento</p>
+                <p className="text-2xl font-bold text-[#1E2247]">
                   {stats ? formatCurrency(stats.total_revenue) : "..."}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <DollarSign className="h-5 w-5 text-emerald-600" />
+              <div className="h-10 w-10 rounded-lg bg-[#EEF7ED] flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-[#5AAF50]" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+        <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-500">Orcamentos</p>
-                <p className="text-2xl font-bold text-stone-800">
+                <p className="text-sm text-[#7880A0]">Orcamentos</p>
+                <p className="text-2xl font-bold text-[#1E2247]">
                   {stats?.total_budgets ?? "..."}
                 </p>
-                <p className="text-xs text-stone-400">
+                <p className="text-xs text-[#7880A0]">
                   {stats ? `${formatPercent(stats.conversion_rate)} conversao` : ""}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                <FileText className="h-5 w-5 text-blue-600" />
+              <div className="h-10 w-10 rounded-lg bg-[#F0F4FA] flex items-center justify-center">
+                <FileText className="h-5 w-5 text-[#7B9ACC]" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+        <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-500">Ticket Medio</p>
-                <p className="text-2xl font-bold text-stone-800">
+                <p className="text-sm text-[#7880A0]">Ticket Medio</p>
+                <p className="text-2xl font-bold text-[#1E2247]">
                   {stats ? formatCurrency(stats.avg_ticket) : "..."}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                <Target className="h-5 w-5 text-amber-600" />
+              <div className="h-10 w-10 rounded-lg bg-[#FFF8EC] flex items-center justify-center">
+                <Target className="h-5 w-5 text-[#D07840]" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+        <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-stone-500">Clientes</p>
-                <p className="text-2xl font-bold text-stone-800">
+                <p className="text-sm text-[#7880A0]">Clientes</p>
+                <p className="text-2xl font-bold text-[#1E2247]">
                   {stats?.total_clients ?? "..."}
                 </p>
               </div>
-              <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                <Users className="h-5 w-5 text-purple-600" />
+              <div className="h-10 w-10 rounded-lg bg-[#EEF0F8] flex items-center justify-center">
+                <Users className="h-5 w-5 text-[#4A5BA8]" />
               </div>
             </div>
           </CardContent>
@@ -157,9 +157,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Pipeline */}
-      <Card className="border-[#E7E5E4]" style={{ borderRadius: 12 }}>
+      <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-stone-800">
+          <CardTitle className="text-lg font-semibold text-[#1E2247]">
             Pipeline de Orcamentos
           </CardTitle>
         </CardHeader>
@@ -175,10 +175,10 @@ export default function DashboardPage() {
                       : 0;
                   return (
                     <div key={key} className="flex items-center gap-3">
-                      <span className="text-sm text-stone-600 w-24">
+                      <span className="text-sm text-[#7880A0] w-24">
                         {statusLabels[key]}
                       </span>
-                      <div className="flex-1 h-6 bg-stone-100 rounded-full overflow-hidden">
+                      <div className="flex-1 h-6 bg-[#F0F1F6] rounded-full overflow-hidden">
                         <div
                           className={`h-full ${statusColors[key]} rounded-full transition-all duration-500`}
                           style={{ width: `${pct}%` }}
@@ -199,17 +199,17 @@ export default function DashboardPage() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card
-          className="border-[#E7E5E4] cursor-pointer hover:shadow-md transition-shadow"
+          className="border-[#E2E4EE] cursor-pointer hover:shadow-md transition-shadow"
           style={{ borderRadius: 12 }}
           onClick={() => router.push("/budgets")}
         >
           <CardContent className="pt-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-lg bg-amber-100 flex items-center justify-center">
-              <FileText className="h-6 w-6 text-amber-600" />
+            <div className="h-12 w-12 rounded-lg bg-[#EEF0F8] flex items-center justify-center">
+              <FileText className="h-6 w-6 text-[#4A5BA8]" />
             </div>
             <div>
-              <p className="font-semibold text-stone-800">Novo Orcamento</p>
-              <p className="text-sm text-stone-500">
+              <p className="font-semibold text-[#1E2247]">Novo Orcamento</p>
+              <p className="text-sm text-[#7880A0]">
                 Crie um orcamento para seu proximo evento
               </p>
             </div>
@@ -217,17 +217,17 @@ export default function DashboardPage() {
         </Card>
 
         <Card
-          className="border-[#E7E5E4] cursor-pointer hover:shadow-md transition-shadow"
+          className="border-[#E2E4EE] cursor-pointer hover:shadow-md transition-shadow"
           style={{ borderRadius: 12 }}
           onClick={() => router.push("/catalog")}
         >
           <CardContent className="pt-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
-              <Package className="h-6 w-6 text-blue-600" />
+            <div className="h-12 w-12 rounded-lg bg-[#F0F4FA] flex items-center justify-center">
+              <Package className="h-6 w-6 text-[#7B9ACC]" />
             </div>
             <div>
-              <p className="font-semibold text-stone-800">Ver Catalogo</p>
-              <p className="text-sm text-stone-500">
+              <p className="font-semibold text-[#1E2247]">Ver Catalogo</p>
+              <p className="text-sm text-[#7880A0]">
                 Gerencie seus itens de decoracao
               </p>
             </div>

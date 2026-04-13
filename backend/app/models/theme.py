@@ -12,7 +12,7 @@ class Theme(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     tenant_id: Mapped[int] = mapped_column(ForeignKey("tenants.id"), index=True)
     name: Mapped[str] = mapped_column(String(200))
-    color: Mapped[str] = mapped_column(String(20), default="#B45309")
+    color: Mapped[str] = mapped_column(String(20), default="#4A5BA8")
     emoji: Mapped[str] = mapped_column(String(10), default="🎉")
     suggested_items: Mapped[list[int] | None] = mapped_column(ARRAY(Integer), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

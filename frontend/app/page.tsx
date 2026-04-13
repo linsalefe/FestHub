@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
-    const token = localStorage.getItem("festhub_token");
+    const token = localStorage.getItem("ilemagique_token");
     router.replace(token ? "/dashboard" : "/login");
   }, [router]);
   return null;

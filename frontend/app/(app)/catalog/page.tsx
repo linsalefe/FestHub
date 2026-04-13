@@ -67,14 +67,14 @@ export default function CatalogPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-stone-500">
+        <p className="text-[#7880A0]">
           {items.length} itens no catalogo
         </p>
         <Button
           onClick={() => setShowForm(!showForm)}
           className="text-white font-semibold"
           style={{
-            background: "linear-gradient(135deg, #FBBF24, #D97706)",
+            background: "linear-gradient(135deg, #E8A030, #D07840)",
             borderRadius: 8,
           }}
         >
@@ -84,7 +84,7 @@ export default function CatalogPage() {
       </div>
 
       {showForm && (
-        <Card className="border-[#E7E5E4] border-amber-200 bg-amber-50/50" style={{ borderRadius: 12 }}>
+        <Card className="border-[#E2E4EE] border-[#4A5BA8]/30 bg-[#EEF0F8]" style={{ borderRadius: 12 }}>
           <CardContent className="pt-6">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div>
@@ -99,7 +99,7 @@ export default function CatalogPage() {
               <div>
                 <Label className="text-xs">Categoria</Label>
                 <select
-                  className="w-full mt-1 px-3 py-2 border border-[#E7E5E4] rounded-lg text-sm bg-white"
+                  className="w-full mt-1 px-3 py-2 border border-[#E2E4EE] rounded-lg text-sm bg-white"
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
                 >
@@ -131,7 +131,7 @@ export default function CatalogPage() {
                 />
               </div>
               <div className="flex items-end">
-                <Button onClick={handleCreate} className="w-full bg-emerald-600 hover:bg-emerald-700" style={{ borderRadius: 8 }}>
+                <Button onClick={handleCreate} className="w-full bg-[#5AAF50] hover:bg-[#4A9F40]" style={{ borderRadius: 8 }}>
                   <Check className="h-4 w-4 mr-1" /> Salvar
                 </Button>
               </div>
@@ -144,7 +144,7 @@ export default function CatalogPage() {
         (group) =>
           group.items.length > 0 && (
             <div key={group.category}>
-              <h3 className="text-lg font-semibold text-stone-800 mb-3">
+              <h3 className="text-lg font-semibold text-[#1E2247] mb-3">
                 {group.category}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -156,13 +156,13 @@ export default function CatalogPage() {
                   return (
                     <Card
                       key={item.id}
-                      className="border-[#E7E5E4]"
+                      className="border-[#E2E4EE]"
                       style={{ borderRadius: 12 }}
                     >
                       <CardContent className="pt-5 pb-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="font-semibold text-stone-800">
+                            <p className="font-semibold text-[#1E2247]">
                               {item.name}
                             </p>
                             <Badge
@@ -174,32 +174,32 @@ export default function CatalogPage() {
                           </div>
                           <button
                             onClick={() => handleDelete(item.id)}
-                            className="text-stone-400 hover:text-red-500"
+                            className="text-[#7880A0] hover:text-red-500"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                         <div className="mt-3 flex items-center gap-4 text-sm">
                           <div>
-                            <p className="text-xs text-stone-400">Custo</p>
-                            <p className="font-medium text-stone-600">
+                            <p className="text-xs text-[#7880A0]">Custo</p>
+                            <p className="font-medium text-[#7880A0]">
                               {formatCurrency(item.cost)}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs text-stone-400">Preco</p>
-                            <p className="font-medium text-stone-800">
+                            <p className="text-xs text-[#7880A0]">Preco</p>
+                            <p className="font-medium text-[#4A5BA8]">
                               {formatCurrency(item.price)}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs text-stone-400">Margem</p>
+                            <p className="text-xs text-[#7880A0]">Margem</p>
                             <p
                               className={`font-medium ${
                                 margin >= 40
-                                  ? "text-emerald-600"
+                                  ? "text-[#5AAF50]"
                                   : margin >= 20
-                                  ? "text-amber-600"
+                                  ? "text-[#D07840]"
                                   : "text-red-600"
                               }`}
                             >

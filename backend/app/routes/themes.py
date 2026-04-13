@@ -12,7 +12,7 @@ router = APIRouter(prefix="/api/themes", tags=["themes"])
 
 class ThemeCreate(BaseModel):
     name: str
-    color: str = "#B45309"
+    color: str = "#4A5BA8"
     emoji: str = "🎉"
     suggested_items: list[int] | None = None
 

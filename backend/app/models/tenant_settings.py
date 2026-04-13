@@ -15,6 +15,6 @@ class TenantSettings(Base):
     company_logo: Mapped[str | None] = mapped_column(String(500), nullable=True)
     company_phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
     company_instagram: Mapped[str | None] = mapped_column(String(200), nullable=True)
-    pdf_accent_color: Mapped[str] = mapped_column(String(20), default="#B45309")
+    pdf_accent_color: Mapped[str] = mapped_column(String(20), default="#4A5BA8")
 
     tenant = relationship("Tenant", back_populates="settings")
