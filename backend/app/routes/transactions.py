@@ -42,6 +42,7 @@ def _serialize_transaction(t: Transaction) -> dict:
         "notes": t.notes,
         "created_at": t.created_at.isoformat() if t.created_at else None,
         "client_name": t.client.name if t.client else None,
+        "client_phone": t.client.phone if t.client else None,
         "budget_info": f"Orcamento #{t.budget_id}" if t.budget_id else None,
     }
 

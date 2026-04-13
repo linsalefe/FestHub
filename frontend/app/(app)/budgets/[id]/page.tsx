@@ -18,6 +18,7 @@ import {
   FileSignature,
   DollarSign,
   ArrowUpRight,
+  MessageCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import api from "@/lib/api";
-import { formatCurrency, formatPercent } from "@/lib/format";
+import { formatCurrency, formatPercent, formatDate } from "@/lib/format";
+import { whatsappLink } from "@/lib/whatsapp";
 import { toast } from "sonner";
 
 interface BudgetItem {
@@ -50,6 +52,7 @@ interface VariableCost {
 interface Client {
   id: number;
   name: string;
+  phone: string | null;
 }
 
 interface Theme {
@@ -429,6 +432,23 @@ export default function BudgetEditorPage() {
             <FileDown className="h-4 w-4 mr-1" />
             Gerar PDF
           </Button>
+          {(() => {
+            const client = clients.find((c) => c.id === budget.client_id);
+            if (!client?.phone) return null;
+            const theme = themes.find((t) => t.id === budget.theme_id);
+            const msg = `Olá ${client.name}! 🎉\n\nSegue o orçamento da sua festa:\n\n${theme ? `🎨 Tema: ${theme.emoji} ${theme.name}\n` : ""}${budget.event_date ? `📅 Data: ${formatDate(budget.event_date)}\n` : ""}💰 Valor: ${formatCurrency(calc?.total || 0)}\n\nAcesse os detalhes e me diga o que acha!`;
+            return (
+              <a
+                href={whatsappLink(client.phone, msg)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg border border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
+              >
+                <MessageCircle className="h-4 w-4" />
+                WhatsApp
+              </a>
+            );
+          })()}
           <Button
             size="sm"
             variant="outline"

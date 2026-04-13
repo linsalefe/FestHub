@@ -11,6 +11,7 @@ import {
   ArrowRight,
   X,
   ChevronRight,
+  MessageCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { whatsappLink } from "@/lib/whatsapp";
 import { toast } from "sonner";
 
 interface ContractData {
@@ -411,6 +413,20 @@ export default function ContratosPage() {
                     >
                       <Download className="h-4 w-4" />
                     </button>
+                    {c.client?.phone && (
+                      <a
+                        href={whatsappLink(
+                          c.client.phone,
+                          `Olá ${c.client.name}! 📝\n\nSegue o contrato ${c.contract_number} para sua festa.\n\n📅 Data: ${c.event_date ? formatDate(c.event_date) : "A definir"}\n💰 Valor: ${formatCurrency(c.total_value)}\n\nPor favor, analise e me retorne com a assinatura. Qualquer dúvida, estou à disposição!`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Enviar via WhatsApp"
+                        className="p-1.5 rounded-lg text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </a>
+                    )}
                     <button
                       onClick={() => openEditDialog(c)}
                       title="Editar"

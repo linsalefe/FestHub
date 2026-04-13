@@ -9,7 +9,7 @@ from app.routes import (
     auth, budgets, catalog, clients, dashboard,
     settings as settings_routes, themes,
     pipeline, leads, packages, suppliers, calendar, checklist, users,
-    transactions, contracts,
+    transactions, contracts, notifications, search, reports,
 )
 
 
@@ -47,6 +47,9 @@ app.include_router(checklist.router)
 app.include_router(users.router)
 app.include_router(transactions.router)
 app.include_router(contracts.router)
+app.include_router(notifications.router)
+app.include_router(search.router)
+app.include_router(reports.router)
 
 
 @app.get("/api/health")

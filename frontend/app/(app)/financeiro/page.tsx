@@ -16,6 +16,7 @@ import {
   ArrowDownRight,
   FileText,
   X,
+  MessageCircle,
 } from "lucide-react";
 import {
   BarChart,
@@ -37,6 +38,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import api from "@/lib/api";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { whatsappLink } from "@/lib/whatsapp";
 import { toast } from "sonner";
 
 interface Transaction {
@@ -53,6 +55,7 @@ interface Transaction {
   budget_id: number | null;
   client_id: number | null;
   client_name: string | null;
+  client_phone: string | null;
   budget_info: string | null;
   installment_number: number | null;
   total_installments: number | null;
@@ -531,13 +534,29 @@ export default function FinanceiroPage() {
                     </span>
                     <div className="col-span-2 flex items-center justify-end gap-1">
                       {(t.status === "pending" || isOverdue) && (
-                        <button
-                          onClick={() => handlePay(t.id)}
-                          title="Marcar como pago"
-                          className="p-1.5 rounded-lg text-[#5AAF50] hover:bg-[#EEF7ED] transition-colors"
-                        >
-                          <Check className="h-3.5 w-3.5" />
-                        </button>
+                        <>
+                          <button
+                            onClick={() => handlePay(t.id)}
+                            title="Marcar como pago"
+                            className="p-1.5 rounded-lg text-[#5AAF50] hover:bg-[#EEF7ED] transition-colors"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                          </button>
+                          {t.client_phone && t.type === "income" && (
+                            <a
+                              href={whatsappLink(
+                                t.client_phone,
+                                `Olá ${t.client_name}! 😊\n\nPassando para lembrar sobre o pagamento pendente:\n\n📋 ${t.description}\n💰 Valor: ${formatCurrency(t.amount)}${t.due_date ? `\n📅 Vencimento: ${formatDate(t.due_date)}` : ""}\n\nQualquer dúvida, estou à disposição!`
+                              )}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Cobrar via WhatsApp"
+                              className="p-1.5 rounded-lg text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
+                            >
+                              <MessageCircle className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                        </>
                       )}
                       <button
                         onClick={() => openEditDialog(t)}
