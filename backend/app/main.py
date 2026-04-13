@@ -5,11 +5,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.routes import auth, budgets, catalog, clients, dashboard, settings as settings_routes, themes
+from app.routes import (
+    auth, budgets, catalog, clients, dashboard,
+    settings as settings_routes, themes,
+    pipeline, leads, packages, suppliers, calendar, checklist, users,
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Import all models so metadata knows about them
+    import app.models  # noqa: F401
     Base.metadata.create_all(bind=engine)
     yield
 
@@ -31,6 +37,13 @@ app.include_router(themes.router)
 app.include_router(budgets.router)
 app.include_router(dashboard.router)
 app.include_router(settings_routes.router)
+app.include_router(pipeline.router)
+app.include_router(leads.router)
+app.include_router(packages.router)
+app.include_router(suppliers.router)
+app.include_router(calendar.router)
+app.include_router(checklist.router)
+app.include_router(users.router)
 
 
 @app.get("/api/health")

@@ -20,6 +20,9 @@ class Budget(Base):
     payment_condition: Mapped[str] = mapped_column(String(200), default="50% entrada + 50% no evento")
     validity_days: Mapped[int] = mapped_column(Integer, default=7)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    scenario_label: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    parent_budget_id: Mapped[int | None] = mapped_column(ForeignKey("budgets.id"), nullable=True)
+    pdf_generated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     total_cached: Mapped[float] = mapped_column(Numeric(10, 2), default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(

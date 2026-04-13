@@ -311,3 +311,85 @@ def remove_variable_cost(budget_id: int, vc_id: int, db: Session = Depends(get_d
 def calculate(budget_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     budget = _get_budget(budget_id, user.tenant_id, db)
     return calculate_budget(budget, db)
+
+
+@router.post("/{budget_id}/generate-scenarios")
+def generate_scenarios(budget_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    original = _get_budget(budget_id, user.tenant_id, db)
+    scenarios = [
+        ("Econômico", 0.7),
+        ("Intermediário", 1.0),
+        ("Premium", 1.4),
+    ]
+    result = []
+    for label, multiplier in scenarios:
+        new_budget = Budget(
+            tenant_id=original.tenant_id,
+            client_id=original.client_id,
+            theme_id=original.theme_id,
+            status="draft",
+            event_date=original.event_date,
+            event_address=original.event_address,
+            discount=original.discount,
+            payment_condition=original.payment_condition,
+            validity_days=original.validity_days,
+            notes=original.notes,
+            scenario_label=label,
+            parent_budget_id=original.id,
+        )
+        db.add(new_budget)
+        db.flush()
+        for item in original.items:
+            new_item = BudgetItem(
+                budget_id=new_budget.id,
+                catalog_item_id=item.catalog_item_id,
+                name=item.name,
+                cost=float(item.cost) * multiplier,
+                price=float(item.price) * multiplier,
+                quantity=item.quantity,
+            )
+            db.add(new_item)
+        for vc in original.variable_costs:
+            db.add(BudgetVariableCost(
+                budget_id=new_budget.id,
+                name=vc.name,
+                value=float(vc.value) * multiplier,
+            ))
+        db.commit()
+        new_budget = _get_budget(new_budget.id, user.tenant_id, db)
+        calc = calculate_budget(new_budget, db)
+        new_budget.total_cached = calc["total"]
+        db.commit()
+        result.append(_serialize_budget(new_budget))
+    return result
+
+
+@router.get("/{budget_id}/scenarios")
+def list_scenarios(budget_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    budgets = (
+        db.query(Budget)
+        .options(joinedload(Budget.items), joinedload(Budget.variable_costs), joinedload(Budget.client), joinedload(Budget.theme))
+        .filter(Budget.parent_budget_id == budget_id, Budget.tenant_id == user.tenant_id)
+        .all()
+    )
+    return [_serialize_budget(b) for b in budgets]
+
+
+@router.get("/{budget_id}/pdf")
+def get_pdf(budget_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    from datetime import datetime, timezone as tz
+    from fastapi.responses import Response
+    from app.services.pdf_generator import generate_budget_pdf
+
+    budget = _get_budget(budget_id, user.tenant_id, db)
+    pdf_bytes = generate_budget_pdf(budget, db)
+    budget.pdf_generated_at = datetime.now(tz.utc)
+    db.commit()
+
+    content_type = "application/pdf" if pdf_bytes[:4] == b"%PDF" else "text/html"
+    ext = "pdf" if content_type == "application/pdf" else "html"
+    return Response(
+        content=pdf_bytes,
+        media_type=content_type,
+        headers={"Content-Disposition": f'attachment; filename="orcamento_{budget_id}.{ext}"'},
+    )

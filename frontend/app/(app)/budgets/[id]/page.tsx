@@ -10,6 +10,11 @@ import {
   Search,
   X,
   ArrowLeft,
+  FileDown,
+  BarChart3,
+  CheckSquare,
+  Sparkles,
+  Link,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,6 +62,25 @@ interface CatalogItem {
   category: string;
   cost: number;
   price: number;
+}
+
+interface PackageOption {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+interface ChecklistItem {
+  id: number;
+  budget_id: number;
+  description: string;
+  is_done: boolean;
+}
+
+interface Scenario {
+  id: number;
+  budget_id: number;
+  name: string;
 }
 
 interface Budget {
@@ -115,17 +139,39 @@ export default function BudgetEditorPage() {
   const [newVcName, setNewVcName] = useState("");
   const [newVcValue, setNewVcValue] = useState("");
 
+  // Package state
+  const [packages, setPackages] = useState<PackageOption[]>([]);
+  const [showPackageSelect, setShowPackageSelect] = useState(false);
+  const [applyingPackage, setApplyingPackage] = useState(false);
+
+  // Checklist state
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
+  const [newChecklistItem, setNewChecklistItem] = useState("");
+  const [generatingChecklist, setGeneratingChecklist] = useState(false);
+
+  // Scenarios state
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
+  const [generatingScenarios, setGeneratingScenarios] = useState(false);
+
   const fetchBudget = useCallback(() => {
     api.get(`/api/budgets/${budgetId}`).then((r) => setBudget(r.data));
     api.get(`/api/budgets/${budgetId}/calculate`).then((r) => setCalc(r.data));
   }, [budgetId]);
 
+  const fetchChecklist = useCallback(() => {
+    api
+      .get(`/api/checklists/budget/${budgetId}`)
+      .then((r) => setChecklist(r.data))
+      .catch(() => setChecklist([]));
+  }, [budgetId]);
+
   useEffect(() => {
     fetchBudget();
+    fetchChecklist();
     api.get("/api/clients").then((r) => setClients(r.data));
     api.get("/api/themes").then((r) => setThemes(r.data));
     api.get("/api/catalog").then((r) => setCatalog(r.data));
-  }, [fetchBudget]);
+  }, [fetchBudget, fetchChecklist]);
 
   const updateBudget = async (data: Record<string, unknown>) => {
     await api.put(`/api/budgets/${budgetId}`, data);
@@ -191,6 +237,108 @@ export default function BudgetEditorPage() {
     fetchBudget();
   };
 
+  // --- Apply Package ---
+  const handleOpenPackageSelect = async () => {
+    try {
+      const r = await api.get("/api/packages");
+      setPackages(r.data);
+      setShowPackageSelect(true);
+    } catch {
+      toast.error("Erro ao carregar pacotes");
+    }
+  };
+
+  const handleApplyPackage = async (packageId: number) => {
+    setApplyingPackage(true);
+    try {
+      await api.post("/api/packages/apply-to-budget", {
+        package_id: packageId,
+        budget_id: parseInt(budgetId),
+      });
+      fetchBudget();
+      toast.success("Pacote aplicado com sucesso!");
+    } catch {
+      toast.error("Erro ao aplicar pacote");
+    } finally {
+      setApplyingPackage(false);
+      setShowPackageSelect(false);
+    }
+  };
+
+  // --- Generate PDF ---
+  const handleGeneratePdf = async () => {
+    try {
+      const r = await api.get(`/api/budgets/${budgetId}/pdf`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([r.data]));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `orcamento-${budgetId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("PDF gerado com sucesso!");
+    } catch {
+      toast.error("Erro ao gerar PDF");
+    }
+  };
+
+  // --- Generate Scenarios ---
+  const handleGenerateScenarios = async () => {
+    setGeneratingScenarios(true);
+    try {
+      const r = await api.post(`/api/budgets/${budgetId}/generate-scenarios`);
+      setScenarios(r.data);
+      toast.success("Cenarios gerados com sucesso!");
+    } catch {
+      toast.error("Erro ao gerar cenarios");
+    } finally {
+      setGeneratingScenarios(false);
+    }
+  };
+
+  // --- Checklist ---
+  const toggleChecklistItem = async (item: ChecklistItem) => {
+    try {
+      await api.put(`/api/checklists/${item.id}`, {
+        ...item,
+        is_done: !item.is_done,
+      });
+      fetchChecklist();
+    } catch {
+      toast.error("Erro ao atualizar item");
+    }
+  };
+
+  const handleGenerateChecklist = async () => {
+    setGeneratingChecklist(true);
+    try {
+      await api.post(`/api/checklists/budget/${budgetId}/generate`);
+      fetchChecklist();
+      toast.success("Checklist gerado com sucesso!");
+    } catch {
+      toast.error("Erro ao gerar checklist");
+    } finally {
+      setGeneratingChecklist(false);
+    }
+  };
+
+  const handleAddChecklistItem = async () => {
+    if (!newChecklistItem.trim()) return;
+    try {
+      await api.post(`/api/checklists/budget/${budgetId}`, {
+        description: newChecklistItem.trim(),
+        is_done: false,
+      });
+      setNewChecklistItem("");
+      fetchChecklist();
+    } catch {
+      toast.error("Erro ao adicionar item");
+    }
+  };
+
   if (!budget) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -218,22 +366,70 @@ export default function BudgetEditorPage() {
             Orcamento #{budget.id}
           </h2>
         </div>
-        <div className="flex gap-2">
-          {statuses.map((s) => (
-            <button
-              key={s.value}
-              onClick={() => changeStatus(s.value)}
-              className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
-                budget.status === s.value
-                  ? s.color + " ring-2 ring-offset-1 ring-[#E2E4EE]"
-                  : "bg-[#F0F1F6] text-[#7880A0] hover:bg-[#E2E4EE]"
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
+        <div className="flex items-center gap-3">
+          <div className="flex gap-2">
+            {statuses.map((s) => (
+              <button
+                key={s.value}
+                onClick={() => changeStatus(s.value)}
+                className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
+                  budget.status === s.value
+                    ? s.color + " ring-2 ring-offset-1 ring-[#E2E4EE]"
+                    : "bg-[#F0F1F6] text-[#7880A0] hover:bg-[#E2E4EE]"
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <Separator orientation="vertical" className="h-6" />
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleGeneratePdf}
+            style={{ borderRadius: 8 }}
+          >
+            <FileDown className="h-4 w-4 mr-1" />
+            Gerar PDF
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleGenerateScenarios}
+            disabled={generatingScenarios}
+            style={{ borderRadius: 8 }}
+          >
+            <BarChart3 className="h-4 w-4 mr-1" />
+            {generatingScenarios ? "Gerando..." : "Gerar Cenarios"}
+          </Button>
         </div>
       </div>
+
+      {/* Scenarios links */}
+      {scenarios.length > 0 && (
+        <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
+          <CardContent className="pt-4 pb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <BarChart3 className="h-4 w-4 text-[#4A5BA8]" />
+              <span className="text-sm font-medium text-[#1E2247]">
+                Cenarios Gerados
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {scenarios.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => router.push(`/budgets/${s.id}`)}
+                  className="flex items-center gap-1 px-3 py-1.5 text-sm bg-[#EEF0F8] text-[#4A5BA8] rounded-lg hover:bg-[#DDE1F0] transition-colors"
+                >
+                  <Link className="h-3 w-3" />
+                  {s.name}
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column - Editor */}
@@ -314,6 +510,41 @@ export default function BudgetEditorPage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">Itens do Orcamento</CardTitle>
                 <div className="flex gap-2">
+                  <div className="relative">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleOpenPackageSelect}
+                      disabled={applyingPackage}
+                      style={{ borderRadius: 8 }}
+                    >
+                      <Sparkles className="h-4 w-4 mr-1" />
+                      {applyingPackage ? "Aplicando..." : "Aplicar Pacote"}
+                    </Button>
+                    {showPackageSelect && packages.length > 0 && (
+                      <div className="absolute right-0 top-full mt-1 z-20 w-64 bg-white border border-[#E2E4EE] rounded-lg shadow-lg p-2">
+                        <div className="flex items-center justify-between mb-2 px-2">
+                          <span className="text-xs font-medium text-[#7880A0]">
+                            Selecione um pacote
+                          </span>
+                          <button onClick={() => setShowPackageSelect(false)}>
+                            <X className="h-3 w-3 text-[#7880A0]" />
+                          </button>
+                        </div>
+                        <div className="max-h-48 overflow-y-auto space-y-1">
+                          {packages.map((pkg) => (
+                            <button
+                              key={pkg.id}
+                              onClick={() => handleApplyPackage(pkg.id)}
+                              className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-[#EEF0F8] transition-colors"
+                            >
+                              {pkg.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <Button
                     size="sm"
                     variant="outline"
@@ -504,6 +735,80 @@ export default function BudgetEditorPage() {
                 rows={3}
                 style={{ borderRadius: 8 }}
               />
+            </CardContent>
+          </Card>
+
+          {/* Checklist */}
+          <Card className="border-[#E2E4EE]" style={{ borderRadius: 12 }}>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <CheckSquare className="h-4 w-4 text-[#4A5BA8]" />
+                  Checklist
+                </CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleGenerateChecklist}
+                  disabled={generatingChecklist}
+                  style={{ borderRadius: 8 }}
+                >
+                  <Sparkles className="h-4 w-4 mr-1" />
+                  {generatingChecklist ? "Gerando..." : "Gerar Checklist"}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {checklist.length === 0 ? (
+                <p className="text-sm text-[#7880A0] text-center py-4">
+                  Nenhum item no checklist
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {checklist.map((item) => (
+                    <label
+                      key={item.id}
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#F0F1F6] cursor-pointer transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={item.is_done}
+                        onChange={() => toggleChecklistItem(item)}
+                        className="h-4 w-4 rounded border-[#E2E4EE] text-[#4A5BA8] focus:ring-[#4A5BA8]"
+                      />
+                      <span
+                        className={`text-sm ${
+                          item.is_done
+                            ? "line-through text-[#7880A0]"
+                            : "text-[#1E2247]"
+                        }`}
+                      >
+                        {item.description}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2 pt-2">
+                <Input
+                  placeholder="Novo item do checklist..."
+                  value={newChecklistItem}
+                  onChange={(e) => setNewChecklistItem(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleAddChecklistItem();
+                  }}
+                  className="flex-1"
+                  style={{ borderRadius: 8 }}
+                />
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleAddChecklistItem}
+                  style={{ borderRadius: 8 }}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>

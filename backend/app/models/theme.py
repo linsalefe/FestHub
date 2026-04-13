@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import ARRAY, DateTime, ForeignKey, Integer, String
+from sqlalchemy import ARRAY, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -14,5 +14,7 @@ class Theme(Base):
     name: Mapped[str] = mapped_column(String(200))
     color: Mapped[str] = mapped_column(String(20), default="#4A5BA8")
     emoji: Mapped[str] = mapped_column(String(10), default="🎉")
+    description: Mapped[str | None] = mapped_column(Text, nullable=True, default="")
+    photo_urls: Mapped[str | None] = mapped_column(Text, nullable=True, default="[]")
     suggested_items: Mapped[list[int] | None] = mapped_column(ARRAY(Integer), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

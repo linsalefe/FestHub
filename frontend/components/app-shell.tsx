@@ -7,10 +7,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
+  GitBranch,
   FileText,
+  Calendar,
   Package,
   Users,
+  Truck,
   Settings,
+  UserCog,
   PanelLeftClose,
   Menu,
   LogOut,
@@ -21,20 +25,54 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/auth-context";
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/budgets", label: "Orcamentos", icon: FileText },
-  { href: "/catalog", label: "Catalogo", icon: Package },
-  { href: "/clients", label: "Clientes", icon: Users },
-  { href: "/settings", label: "Configuracoes", icon: Settings },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+interface NavGroup {
+  group: string;
+  items: NavItem[];
+}
+
+const navGroups: NavGroup[] = [
+  {
+    group: "PRINCIPAL",
+    items: [
+      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/pipeline", label: "Pipeline", icon: GitBranch },
+      { href: "/budgets", label: "Orcamentos", icon: FileText },
+      { href: "/calendar", label: "Agenda", icon: Calendar },
+    ],
+  },
+  {
+    group: "GESTÃO",
+    items: [
+      { href: "/catalog", label: "Catalogo", icon: Package },
+      { href: "/clients", label: "Clientes", icon: Users },
+      { href: "/suppliers", label: "Fornecedores", icon: Truck },
+    ],
+  },
+  {
+    group: "SISTEMA",
+    items: [
+      { href: "/settings", label: "Configuracoes", icon: Settings },
+      { href: "/users", label: "Usuarios", icon: UserCog },
+    ],
+  },
 ];
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
+  "/pipeline": "Pipeline",
   "/budgets": "Orcamentos",
+  "/calendar": "Agenda",
   "/catalog": "Catalogo",
   "/clients": "Clientes",
+  "/suppliers": "Fornecedores",
   "/settings": "Configuracoes",
+  "/users": "Usuarios",
 };
 
 export default function AppShell({ children }: { children: ReactNode }) {
@@ -95,35 +133,45 @@ export default function AppShell({ children }: { children: ReactNode }) {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 mt-4 space-y-1">
-          {navItems.map((item) => {
-            const active =
-              pathname === item.href ||
-              pathname.startsWith(item.href + "/");
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                title={collapsed ? item.label : undefined}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                  active
-                    ? "bg-[#EEF0F8] text-[#4A5BA8] font-bold"
-                    : "text-[#7880A0] hover:text-[#4A5BA8] hover:bg-[#F5F6FA]"
-                }`}
-              >
-                <item.icon className="h-5 w-5 shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
-                {!collapsed && item.href === "/budgets" && active && (
-                  <Badge
-                    variant="secondary"
-                    className="ml-auto bg-[#4A5BA8] text-white text-xs"
+        <nav className="flex-1 px-3 mt-2 space-y-0.5 overflow-y-auto">
+          {navGroups.map((group) => (
+            <div key={group.group}>
+              {!collapsed && (
+                <p className="text-[10px] uppercase tracking-wider text-[#7880A0] px-3 mt-4 mb-1">
+                  {group.group}
+                </p>
+              )}
+              {collapsed && <div className="mt-3" />}
+              {group.items.map((item) => {
+                const active =
+                  pathname === item.href ||
+                  pathname.startsWith(item.href + "/");
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={collapsed ? item.label : undefined}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                      active
+                        ? "bg-[#EEF0F8] text-[#4A5BA8] font-bold"
+                        : "text-[#7880A0] hover:text-[#4A5BA8] hover:bg-[#F5F6FA]"
+                    }`}
                   >
-                    !
-                  </Badge>
-                )}
-              </Link>
-            );
-          })}
+                    <item.icon className="h-5 w-5 shrink-0" />
+                    {!collapsed && <span>{item.label}</span>}
+                    {!collapsed && item.href === "/budgets" && active && (
+                      <Badge
+                        variant="secondary"
+                        className="ml-auto bg-[#4A5BA8] text-white text-xs"
+                      >
+                        !
+                      </Badge>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {/* User area */}
